@@ -27,7 +27,7 @@ export default function SwipePage() {
     const router = useRouter();
     const current = profiles[index];
 
-    const handleDragEnd = (_: any, info: PanInfo) => {
+    const handleDragEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
         const offsetX = info.offset.x;
         if (offsetX > 100) handleSwipe('right');
         else if (offsetX < -100) handleSwipe('left');
