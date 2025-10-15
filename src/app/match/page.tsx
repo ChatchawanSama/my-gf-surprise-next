@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import confetti from 'canvas-confetti';
 import html2canvas from 'html2canvas';
 import Image from 'next/image';
 
-export default function MatchPage() {
+function MatchContent() {
     const matchRef = useRef<HTMLDivElement | null>(null);
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [matchedAt, setMatchedAt] = useState<Date | null>(null);
@@ -103,5 +103,13 @@ export default function MatchPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function MatchPage() {
+    return (
+        <Suspense fallback={<div className="text-center mt-10 text-pink-500">Loading...</div>}>
+            <MatchContent />
+        </Suspense>
     );
 }
