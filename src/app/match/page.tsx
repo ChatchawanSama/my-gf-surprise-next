@@ -14,6 +14,7 @@ function MatchContent() {
     const [isGenerating, setIsGenerating] = useState(false);
     const [showQR, setShowQR] = useState(false);
     const [currentUrl, setCurrentUrl] = useState('');
+    const [isDownloadingVideo, setIsDownloadingVideo] = useState(false);
 
     const searchParams = useSearchParams();
     const t = searchParams.get('t');
@@ -125,12 +126,64 @@ function MatchContent() {
         }
     }
 
+    async function shareVideo() {
+        setIsDownloadingVideo(true);
+        
+        try {
+            // Fetch วิดีโอจาก public folder
+            const response = await fetch('/intro.mp4');
+            const blob = await response.blob();
+            const filesArray = [new File([blob], 'our-moment.mp4', { type: 'video/mp4' })];
+            
+            // ตรวจสอบว่า browser รองรับการแชร์ไฟล์หรือไม่
+            const canShareFiles = navigator.canShare && navigator.canShare({ files: filesArray });
+            
+            if (navigator.share && canShareFiles) {
+                try {
+                    await navigator.share({ 
+                        files: filesArray, 
+                        title: "Our Special Moment 💕", 
+                        text: 'ดูวิดีโอพิเศษของเราสิ! 💖' 
+                    });
+                    setIsDownloadingVideo(false);
+                    return;
+                } catch (err) {
+                    if ((err as Error).name === 'AbortError') {
+                        setIsDownloadingVideo(false);
+                        return;
+                    }
+                    console.warn('Share failed', err);
+                }
+            }
+
+            // fallback: ดาวน์โหลดวิดีโอ
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'our-moment.mp4';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            
+            setTimeout(() => {
+                alert('วิดีโอถูกบันทึกแล้ว! 🎥\n\nวิธีแชร์:\n1. เปิดแอพที่ต้องการแชร์\n2. เลือกวิดีโอจาก Camera Roll\n3. แชร์ได้เลย! 💕');
+            }, 500);
+            
+            setIsDownloadingVideo(false);
+        } catch (err) {
+            console.error('Failed to share video', err);
+            alert('ไม่สามารถโหลดวิดีโอได้ กรุณาลองใหม่');
+            setIsDownloadingVideo(false);
+        }
+    }
+
     return (
         <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(to bottom right, #f9a8d4, #ec4899)' }}>
             <audio ref={audioRef} src="/love.mp3" loop />
             
             {/* หน้าจอหลัก */}
-            <div ref={matchRef} className="bg-white/90 p-6 rounded-3xl shadow-2xl w-full max-w-lg text-center">
+            <div ref={matchRef} className="bg-white/90 p-6 rounded-3xl shadow-2xl w-full max-w-lg text-center mx-4">
                 <h1 className="text-3xl font-bold text-pink-600">💘 It&apos;s a Match! 💘</h1>
                 <p className="mt-2 text-sm text-pink-500">You said yes ✨</p>
                 <div className="mt-4">
@@ -146,17 +199,24 @@ function MatchContent() {
                     <p className="font-medium text-pink-600">{matchedAt ? matchedAt.toLocaleString('th-TH') : ''}</p>
                     <p className="text-xs text-pink-500">Since that moment 💞</p>
                 </div>
-                <div className="mt-6 flex justify-center gap-4">
+                <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
                     <button 
                         onClick={saveOrShare} 
                         disabled={isGenerating}
                         className="bg-pink-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-pink-700 transition disabled:opacity-50 font-semibold"
                     >
-                        {isGenerating ? '⏳ Generating...' : '📷 Share to Story'}
+                        {isGenerating ? '⏳ Generating...' : '📷 Share Card'}
+                    </button>
+                    <button 
+                        onClick={shareVideo} 
+                        disabled={isDownloadingVideo}
+                        className="bg-purple-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-purple-700 transition disabled:opacity-50 font-semibold"
+                    >
+                        {isDownloadingVideo ? '⏳ Loading...' : '🎥 Share Video'}
                     </button>
                     <button 
                         onClick={() => setShowQR(true)} 
-                        className="bg-purple-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-purple-700 transition font-semibold"
+                        className="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-indigo-700 transition font-semibold"
                     >
                         💝 Gen QR
                     </button>
@@ -314,14 +374,22 @@ function MatchContent() {
                             textAlign: 'center'
                         }}>
                             <p style={{ fontSize: '60px', fontWeight: 700, color: '#ec4899', marginBottom: '8px' }}>
-                                {matchedAt ? matchedAt.toLocaleDateString('th-TH', { 
+                                {matchedAt ? matchedAt.toLocaleDateString('en-GB', { 
                                     year: 'numeric', 
                                     month: 'long', 
                                     day: 'numeric' 
                                 }) : ''}
                             </p>
+                            <p style={{ fontSize: '48px', fontWeight: 600, color: '#f472b6', marginBottom: '12px' }}>
+                                {matchedAt ? matchedAt.toLocaleTimeString('en-US', { 
+                                    hour: '2-digit', 
+                                    minute: '2-digit',
+                                    second: '2-digit',
+                                    hour12: true
+                                }) : ''}
+                            </p>
                             <p style={{ fontSize: '40px', color: '#f472b6', fontWeight: 500 }}>
-                                The day we said yes 💞
+                                Since that moment 💞
                             </p>
                         </div>
                     </div>

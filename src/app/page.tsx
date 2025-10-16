@@ -9,7 +9,7 @@ export default function IntroPage() {
   const router = useRouter();
   const [videoEnded, setVideoEnded] = useState(false);
   const [started, setStarted] = useState(false);
-  
+
   // Mailbox animation states
   const [showMailbox, setShowMailbox] = useState(true);
   const [showEnvelope, setShowEnvelope] = useState(false);
@@ -41,7 +41,7 @@ export default function IntroPage() {
   const handleEnvelopeClick = () => {
     // Click envelope -> open and show flowers
     setEnvelopeOpened(true);
-    
+
     // Show confetti when flowers appear
     setTimeout(() => {
       confetti({
@@ -61,11 +61,11 @@ export default function IntroPage() {
 
   return (
     <div className="relative w-screen h-screen bg-pink-200 flex items-center justify-center overflow-hidden">
-      
+
       {/* Mailbox Animation Sequence */}
       {!started && (
         <div className="absolute z-50 flex flex-col items-center gap-8">
-          
+
           {/* Mailbox */}
           <AnimatePresence>
             {showMailbox && (
@@ -114,19 +114,19 @@ export default function IntroPage() {
                 initial={{ scale: 1 }}
                 className="relative flex flex-col items-center"
               >
-                {/* Rose bouquet (3 roses) - appears first at top */}
-                <motion.div 
+                {/* Rose bouquet (3 roses) */}
+                <motion.div
                   className="relative mb-[-20px] z-30"
                   initial={{ y: 100, opacity: 0, scale: 0 }}
                   animate={{ y: 0, opacity: 1, scale: 1 }}
-                  transition={{ 
+                  transition={{
                     delay: 0.4,
                     type: 'spring',
                     stiffness: 150,
                     damping: 12
                   }}
                 >
-                  {/* Center rose (tallest) */}
+                  {/* Center rose */}
                   <motion.div
                     initial={{ y: 20 }}
                     animate={{ y: 0 }}
@@ -161,18 +161,32 @@ export default function IntroPage() {
                 </motion.div>
 
                 {/* Envelope (closed with flap) */}
-                <motion.div 
+                <motion.div
                   className="relative z-20"
                   initial={{ scale: 1 }}
                   animate={{ scale: 1 }}
                 >
-                  {/* Envelope body */}
                   <div className="text-[110px] drop-shadow-2xl">
                     ✉️
                   </div>
                 </motion.div>
 
-                {/* "Tap to Start" button */}
+                {/* Animated text below Tap to Start */}
+                <motion.div
+                  className="mt-8 text-center text-white"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1, delay: 1.5 }}
+                >
+                  <div className="text-3xl font-extrabold drop-shadow-lg mb-2">
+                    💖 Are you ready? 💖
+                  </div>
+                  <div className="text-lg drop-shadow-md">
+                    Your surprise awaits ✨
+                  </div>
+                </motion.div>
+
+                {/* Tap to Start button */}
                 <motion.button
                   initial={{ opacity: 0, y: 30, scale: 0 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -186,6 +200,7 @@ export default function IntroPage() {
             )}
           </AnimatePresence>
 
+
         </div>
       )}
 
@@ -193,9 +208,8 @@ export default function IntroPage() {
       <video
         ref={videoRef}
         src="/intro.mp4"
-        className={`w-full h-full object-cover transition-opacity duration-700 ${
-          started ? 'opacity-100' : 'opacity-0'
-        }`}
+        className={`w-full h-full object-cover transition-opacity duration-700 ${started ? 'opacity-100' : 'opacity-0'
+          }`}
         onEnded={() => setVideoEnded(true)}
         controls={false}
         muted={!started}
@@ -235,7 +249,8 @@ export default function IntroPage() {
           animate={{ scale: 1 }}
           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
         >
-          Start Your Surprise 💌
+          <div>Your surprise </div>
+          <div>is here 💌</div>
         </motion.button>
       )}
     </div>

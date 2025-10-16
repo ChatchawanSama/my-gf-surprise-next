@@ -13,9 +13,9 @@ interface Profile {
 }
 
 const profiles: Profile[] = [
-    { name: 'You 💖', image: '/profiles/profile1.jpg', bio: 'เจอกันในทินเดอร์...หัวใจอยู่ตรงนี้' },
-    { name: 'You 🥰', image: '/profiles/profile2.jpg', bio: 'ยิ้มนี้ละ ทำใจละลายเลย' },
-    { name: 'Aom 😳', image: '/profiles/profile3.jpg', bio: 'ยังไม่เบื่อใช่ไหม? ฉันไม่เลย' },
+    { name: 'Fusic 💖', image: '/profiles/profile1.jpg', bio: 'Do you ...' },
+    { name: 'Fusic 🥰', image: '/profiles/profile2.jpg', bio: 'want to ...' },
+    { name: 'Fusic 😳', image: '/profiles/profile3.jpg', bio: 'be my girlfriend?' },
     { name: '💌', bio: 'Do you want to be my girlfriend?', isFinal: true },
 ];
 
@@ -24,6 +24,7 @@ export default function SwipePage() {
     const [dragDirection, setDragDirection] = useState<'left' | 'right' | 'super' | null>(null);
     const [emojis, setEmojis] = useState<Array<{ id: number; symbol: string }>>([]);
     const [superLikeActive, setSuperLikeActive] = useState(false);
+    const [fail, setFail] = useState(1);
     const router = useRouter();
     const current = profiles[index];
 
@@ -57,13 +58,14 @@ export default function SwipePage() {
                 router.push(`/match?t=${Date.now()}`);
             } else {
                 Swal.fire({
-                    title: 'ไม่ได้นะ! 😝',
-                    text: 'ต้องปัดขวาเท่านั้น 💖',
+                    title: 'อาจจะยังน้า! 🙂‍↔️',
+                    text: 'ให้โอกาสรอบที่ '+ fail + ' 💖',
                     icon: 'warning',
-                    confirmButtonText: 'โอเคก็ได้~ 💕',
+                    confirmButtonText: 'โอเชช 💕',
                     confirmButtonColor: '#ec4899',
                 });
                 setDragDirection(null);
+                setFail(fail+1)
             }
         } else {
             setTimeout(() => {
