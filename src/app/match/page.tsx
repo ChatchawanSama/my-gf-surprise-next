@@ -89,7 +89,7 @@ function MatchContent() {
                         await navigator.share({ 
                             files: filesArray, 
                             title: "It's a Match! 💘", 
-                            text: 'เราจับคู่กันแล้ว! 💕' 
+                            text: 'Happy Official GF Day! 💕' 
                         });
                         setIsGenerating(false);
                         return;
