@@ -218,7 +218,7 @@ function MatchContent() {
                         onClick={() => setShowQR(true)} 
                         className="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-indigo-700 transition font-semibold"
                     >
-                        💝 Gen QR
+                        💝 Scan QR Code
                     </button>
                 </div>
             </div>

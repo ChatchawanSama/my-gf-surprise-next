@@ -250,7 +250,7 @@ export default function IntroPage() {
           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
         >
           <div>Your surprise </div>
-          <div>is here 💌</div>
+          <div>is ready 💌</div>
         </motion.button>
       )}
     </div>
