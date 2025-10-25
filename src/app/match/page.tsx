@@ -196,7 +196,7 @@ function MatchContent() {
                     />
                 </div>
                 <div className="mt-4">
-                    <p className="font-medium text-pink-600">{matchedAt ? matchedAt.toLocaleString('th-TH') : ''}</p>
+                    <p className="font-medium text-pink-600">{matchedAt ? matchedAt.toLocaleString('en-GB') : ''}</p>
                     <p className="text-xs text-pink-500">Since that moment 💞</p>
                 </div>
                 <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
